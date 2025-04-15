@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,7 @@ fun LemonadeApp(
     modifier: Modifier = Modifier
 ) {
     var currentStep by remember { mutableIntStateOf(1) }
+    var squeezeCount by remember { mutableIntStateOf(1) }
 
     when(currentStep) {
         1 -> LemonadeWithButtonAndImage(
@@ -59,6 +61,7 @@ fun LemonadeApp(
             contentDescriptionResourceId = R.string.lemon_tree_content_description,
             onImageClick = {
                 currentStep = 2
+                squeezeCount = (2..4).random()
             },
             modifier
         )
@@ -67,7 +70,10 @@ fun LemonadeApp(
             drawableResourceId = R.drawable.lemon_squeeze,
             contentDescriptionResourceId = R.string.lemon_content_description,
             onImageClick = {
-                currentStep = 3
+                squeezeCount--
+                if(squeezeCount == 0) {
+                    currentStep = 3
+                }
             }
         )
         3 -> LemonadeWithButtonAndImage(
@@ -105,7 +111,8 @@ fun LemonadeWithButtonAndImage(
         Button(
             onClick = onImageClick,
             shape = RoundedCornerShape(40.dp),
-            colors = ButtonDefaults.buttonColors(colorResource(R.color.green_mint))
+            colors = ButtonDefaults.buttonColors(colorResource(R.color.green_mint)),
+            border = BorderStroke(0.2.dp, colorResource(R.color.teal_200))
         ) {
             Image(
                 painter = painterResource(drawableResourceId),
